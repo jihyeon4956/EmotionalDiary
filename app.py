@@ -1,24 +1,21 @@
 from pymongo import MongoClient
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 
 client = MongoClient('mongodb+srv://sparta:test@cluster0.xi1pqvv.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 application = app = Flask(__name__)
+app.secret_key = 'any random string'
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
-@app.route('/join')
-def join():
-    return render_template('join.html')
-
-@app.route('/login')
-def login():
+    if 'id' in session:
+        return render_template('index.html')
     return render_template('login.html')
 
 @app.route('/write')
 def write():
+    if 'id' in session:
+        return render_template('index.html')
     return render_template('write.html')
 
 @app.route('/view')
@@ -27,8 +24,25 @@ def view():
 
 @app.route('/mypage')
 def mypage():
+    if 'id' in session:
+        return render_template('index.html')
     return render_template('mypage.html')
 
+@app.route('/join')
+def join():
+    return render_template('join.html')
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        session['id'] = request.form['id']
+        return render_template('index.html')
+    return render_template('login.html')
+
+@app.route('/logout', methods=["GET"])
+def logout():
+    session.pop('id', None)
+    return render_template('index.html')
 
 @app.route("/guestbook", methods=["POST"])
 def guestbook_post():

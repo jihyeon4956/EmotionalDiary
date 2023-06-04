@@ -68,6 +68,18 @@
     <body>
     <div>
         로그인 페이지
+        <div class="container-sm">
+            <form action = "/login" method = "post">
+                <input type="text" class="form-control " id="id" placeholder="id"
+                       name="id">
+                <label for="아이디">아이디</label>
+                <input type="text" class="form-control" id="pw" placeholder="pw"
+                       name="pw">
+                <label for="pw">비밀번호</label>
+                <button type="submit" class="btn btn-primary" style="float:right;"
+                        id="login">로그인</button>
+            </form>
+        </div>
     </div>
     </body>
     </html>
