@@ -8,25 +8,29 @@ app.secret_key = 'any random string'
 
 @app.route('/')
 def home():
-    if 'id' in session:
-        return render_template('index.html')
-    return render_template('login.html')
+    return render_template('index.html')
 
 @app.route('/write')
 def write():
     if 'id' in session:
-        return render_template('index.html')
-    return render_template('write.html')
+        return render_template('write.html')
+    return render_template('login.html')
 
 @app.route('/view')
 def view():
-    return render_template('view.html')
+    return render_template('index.html')
+
+@app.route('/myview')
+def myview():
+    if 'id' in session:
+        return render_template('myview.html')
+    return render_template('login.html')
 
 @app.route('/mypage')
 def mypage():
     if 'id' in session:
-        return render_template('index.html')
-    return render_template('mypage.html')
+        return render_template('mypage.html')
+    return render_template('login.html')
 
 @app.route('/join')
 def join():
@@ -44,20 +48,18 @@ def logout():
     session.pop('id', None)
     return render_template('index.html')
 
-@app.route("/guestbook", methods=["POST"])
+@app.route("/guestbook", methods=['GET','POST'])
 def guestbook_post():
-    name_receive = request.form['name_give']
-    comment_receive = request.form['comment_give']
-    doc = {
-        'name':name_receive,
-        'comment':comment_receive
-    }
-    db.fan.insert_one(doc)
+    if request.method == 'POST':
+        name_receive = request.form['name_give']
+        comment_receive = request.form['comment_give']
+        doc = {
+            'name':name_receive,
+            'comment':comment_receive
+        }
+        db.fan.insert_one(doc)
 
-    return jsonify({'msg': '전송완료!'})
-
-@app.route("/guestbook", methods=["GET"])
-def guestbook_get():
+        return jsonify({'msg': '전송완료!'})
     all_comments = list(db.fan.find({},{'_id':False}))
     return jsonify({'result': all_comments})
 
