@@ -60,11 +60,13 @@ def writediary_post():
         name_receive = request.form['name_give']
         comment_receive = request.form['comment_give']
         private_receive = request.form['private_give']
+        emoji_receive = request.form['emoji_give']
 
         doc = {
             'name':name_receive,
             'comment':comment_receive,
             'private':private_receive,
+            'emoji':emoji_receive,
         }
         db.diary.insert_one(doc)
 
