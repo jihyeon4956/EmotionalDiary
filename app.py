@@ -59,9 +59,12 @@ def writediary_post():
     if request.method == 'POST':
         name_receive = request.form['name_give']
         comment_receive = request.form['comment_give']
+        private_receive = request.form['private_give']
+
         doc = {
             'name':name_receive,
-            'comment':comment_receive
+            'comment':comment_receive,
+            'private':private_receive,
         }
         db.diary.insert_one(doc)
 
