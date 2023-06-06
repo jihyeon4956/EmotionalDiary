@@ -41,6 +41,30 @@ def mypage():
 def join():
     return render_template('join.html')
 
+@app.route('/join_done', methods=['POST'])
+def join_done():
+    email = request.form['email_give']  
+    name = request.form['name_give']
+    userID = request.form['id_give']
+    pwd = request.form['pwd_give']
+
+    # MongoDB의 값중에 회원가입에 기입한 ID이 존재하는지 확인하기
+    user = db.users.find_one({'id': userID})
+
+    if user:  # 이미 존재하는 경우 (True)
+        return jsonify({'msg': '아이디 중복불가. 다시 입력하세요.'})
+    else:
+        # MongoDB에 데이터 저장
+        doc = {
+            'email': email,
+            'name': name,
+            'id': userID,
+            'pwd': pwd
+        }
+        db.users.insert_one(doc)
+        return jsonify({'msg': '회원 가입이 완료되었습니다.'})
+    
+
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
@@ -49,10 +73,13 @@ def login():
         return render_template('index.html',id=id)
     return render_template('login.html')
 
+
 @app.route('/logout', methods=["GET"])
 def logout():
     session.pop('id', None)
     return render_template('index.html')
+
+
 
 @app.route("/writediary", methods=['GET','POST'])
 def writediary_post():
