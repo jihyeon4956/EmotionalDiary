@@ -62,17 +62,26 @@
             formData.append('id_give', userID);
             formData.append('pwd_give', pwd);
 
-            fetch('/join_done', { method: "POST", body: formData })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.msg === "회원 가입이 완료되었습니다.") {
-                        alert(data.msg);
-                        window.location.href = "/";
-                    } else {
-                        alert(data.msg);
-                        window.location.href = "/join";
-                    }
-                });
+            if (email && name && userID && pwd) {           // 필드가 null인지 판별
+                fetch('/join_done', { method: "POST", body: formData })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.msg === '회원 가입이 완료되었습니다.') {
+                            alert(data.msg);
+                            window.location.href = "/";
+                        } else if(data.msg === '유효한 이메일 형식이 아닙니다. 다시 입력하세요.') {
+                            alert(data.msg);
+                            window.location.reload();
+                        } else{
+                            alert(data.msg);
+                            window.location.reload();
+                        }
+                    });
+            } else {
+                alert("모든 정보를 입력하세요.");
+                window.location.reload();
+            }
+
         }
     </script>
 
