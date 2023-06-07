@@ -1,82 +1,91 @@
+<!--  -->
 {% extends 'layout.html' %}
 
 {% block content %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link
-                href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-                rel="stylesheet"
-                integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-                crossorigin="anonymous"
-        />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script
-                src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-                crossorigin="anonymous"
-        ></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 
-        <title>로그인 페이지</title>
+    <title>로그인 페이지</title>
 
-        <link
-                href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
-                rel="stylesheet"
-        />
-        <style>
-            * {
-                font-family: "Noto Serif KR", serif;
-            }
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            font-family: "Noto Serif KR", serif;
+        }
 
-            .mypost {
-                width: 95%;
-                max-width: 500px;
-                margin: 20px auto 20px auto;
+        .container {
+            /* background-color: red; */
+            margin: 100 20 50 20;
+            padding: 20 100 20 200;
 
-                box-shadow: 0px 0px 3px 0px black;
-                padding: 20px;
-            }
 
-            .mypost > button {
-                margin-top: 15px;
-            }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
-            .mycards {
-                width: 95%;
-                max-width: 500px;
-                margin: auto;
-            }
 
-            .mycards > .card {
-                margin-top: 10px;
-                margin-bottom: 10px;
-            }
-        </style>
-        <script>
+        }
 
-        </script>
-    </head>
-    
-    <body>
-    <div>
-        로그인 페이지
-        <div class="container-sm">
-            <form action = "/login" method = "post">
-                <input type="text" class="form-control " id="id" placeholder="id"
-                       name="id">
-                <label for="아이디">아이디</label>
-                <input type="text" class="form-control" id="pw" placeholder="pw"
-                       name="pw">
-                <label for="pw">비밀번호</label>
-                <button type="submit" class="btn btn-primary" style="float:right;"
-                        id="login">로그인</button>
-            </form>
+        .card {}
+    </style>
+    <script>
+        function login_do() {
+
+            let loginID = $('#loginID').val();
+            let loginPW = $('#loginPW').val();
+
+            let formData = new FormData();
+            formData.append("loginID", loginID);
+            formData.append("loginPW", loginPW);
+
+            fetch('/login', { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.msg === "로그인 정보가 유효하지 않습니다.") {
+                        alert(data.msg);
+                        window.location.reload();
+                    } else {
+                        alert(data.msg);
+                        return window.location.href = "/";
+                    }
+                });
+        }
+
+
+
+    </script>
+</head>
+
+<body>
+    <br>
+    <div class="container">
+        <div class="card align-middle" style="width:100%; border-radius:20px; border: 2px solid #dcdcdce0;">
+            <div class="card-title" style="margin-top:50px;">
+                <h2 class="card-title text-center" style="color:#113366;">SIGN IN</h2>
+            </div>
+            <div class="card-body"></div>
+
+            <div>
+                <input type="text" class="form-control" id="loginID" placeholder="아이디" required autofocus><br>
+                <input type="password" class="form-control" id="loginPW" placeholder="비밀번호" required><br>
+                <button class="btn btn-primary btn-block" id="login" onclick="login_do()">로그인</button>
+                <button class="btn btn-primary btn-block" onclick="location.href='/join'">회원가입</button>
+            </div>
         </div>
-    </div>
-    </body>
-    </html>
+
+</html>
 {% endblock %}

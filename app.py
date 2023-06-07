@@ -91,15 +91,16 @@ def join_done():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-         userID = request.form['loginID']
-         password = request.form['loginPW']
+        userID = request.form['loginID']
+        password = request.form['loginPW']
 
-         user = db.users.find_one({'id': userID, 'pwd': password})
-         if user:
-             session['id'] = user['id']
-             return render_template('index.html', id=user['id'])
-         else:
-             return jsonify({'msg': '로그인 정보가 일치하지 않습니다.'})
+        user = db.users.find_one({'id': userID, 'pwd': password})
+        
+        if user is not None:
+            session['id'] = user['id']
+            return jsonify({'msg':"로그인 성공!!"})
+        else:
+            return jsonify({'msg': "로그인 정보가 유효하지 않습니다."})
             
     return render_template('login.html')         
 
